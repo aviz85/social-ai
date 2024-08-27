@@ -1,0 +1,42 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Post {
+  author          String?
+  content         String?
+  createdAt       DateTime         @default(now())
+  datePublished   DateTime?
+  id              String           @id @default(cuid())
+  isPublished     Boolean?
+  likesCount      Int?
+  recommendations Recommendation[]
+  updatedAt       DateTime         @updatedAt
+}
+
+model Recommendation {
+  comments  String?
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  post      Post?    @relation(fields: [postId], references: [id])
+  postId    String?
+  rating    Float?
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
